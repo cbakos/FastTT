@@ -32,6 +32,7 @@ Transform tensor `b` into TT-tensor.
 ## Test
 
 ```
+❯ g++ sptensor2tt.cc test.cc -Wl,--copy-dt-needed-entries -lxerus -o test  
 ❯ ./test -h
 Test fast T2TT.
 Usage:
