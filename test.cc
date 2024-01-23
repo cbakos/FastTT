@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         try {
             return options.parse(argc, argv);
         }
-        catch (cxxopts::OptionParseException &) {
+        catch (...) {
             cout << options.help() << endl;
             exit(1);
         }
@@ -237,7 +237,7 @@ int main(int argc, char *argv[]) {
             int pixel;
             fin >> pixel;
             if (mask[i/channels]) {
-                x_data.try_emplace(i, pixel);
+                x_data.emplace(i, pixel);
             }
         }
         x = Tensor(n_list, Tensor::Representation::Sparse, Tensor::Initialisation::None);
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
             size_t position;
             value_t value;
             line_in >> position >> value;
-            x_data.try_emplace(position, value);
+            x_data.emplace(position, value);
         }
         N = x_data.size();
         x = Tensor(n_list, Tensor::Representation::Sparse, Tensor::Initialisation::None);
@@ -314,19 +314,19 @@ int main(int argc, char *argv[]) {
         sout << 0 << endl;
     }
     
-    if (args.count("rttsvd")) {
-        vout << "----------------Random TTSVD-----------------" << endl;
-        auto y(x);
-        y.use_dense_representation();
-        int r = args["rttsvd"].as<int>();
-        if (r < 0) {
-            error("Target ranks must be positive!");
-        }
-        run_test([d, r](auto &&x) { return randomTTSVD(x, vector<size_t>(d-1, r), vector<size_t>(d-1, 10)); }, y, sout, vout);
-    }
-    else {
-        sout << 0 << endl;
-    }
+    // if (args.count("rttsvd")) {
+    //     vout << "----------------Random TTSVD-----------------" << endl;
+    //     auto y(x);
+    //     y.use_dense_representation();
+    //     int r = args["rttsvd"].as<int>();
+    //     if (r < 0) {
+    //         error("Target ranks must be positive!");
+    //     }
+    //     run_test([d, r](auto &&x) { return randomTTSVD(x, vector<size_t>(d-1, r), vector<size_t>(d-1, 10)); }, y, sout, vout);
+    // }
+    // else {
+    //     sout << 0 << endl;
+    // }
     
     return 0;
 }
