@@ -30,7 +30,18 @@ void run_test(const std::function<TTTensor(const Tensor&)> &f, const Tensor &x, 
     auto tt = f(x);
     auto c_end = clock();
     auto end = chrono::high_resolution_clock::now();
-    auto xx = Tensor(tt);
+    
+    // Construct resulting Tensor in sparse format to avoid memory bottleneck
+    tt.component(0).use_sparse_representation();
+    Tensor xx = tt.component(0); // This will store the final result
+    for (size_t i = 1; i < tt.dimensions.size(); ++i) {
+        tt.component(i).use_sparse_representation();
+        xerus::contract(xx, xx, tt.component(i), 1);
+    }
+    // remove modes with size 1
+    xx.fix_mode(xx.dimensions.size()-1, 0);
+    xx.fix_mode(0, 0);
+
     auto eps = (x - xx).frob_norm() / x.frob_norm();
     auto mse = pow((x - xx).frob_norm(), 2) / x.size;
     auto walltime = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
