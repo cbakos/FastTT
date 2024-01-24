@@ -8,9 +8,10 @@
                 "-Wl,--copy-dt-needed-entries",
                 "sptensor2tt.cc",
                 "test.cc",
+                "-lxerus",
                 "-o",
                 "test.out",
-                "-lxerus"
+                "-g",                
             ],
             "options": {
                 "cwd": "${fileDirname}"

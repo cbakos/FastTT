@@ -10,7 +10,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/test.out",
-            "args": ["-h"],
+            "args": ["-f", "${workspaceFolder}/data/fdm20.tsv", "-t", "tensor",  "-n", "400", "-d", "3", "-p", "1", "-r", "58"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
